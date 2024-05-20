@@ -13,47 +13,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var entities = [GKEntity]()
     var graphs = [String : GKGraph]()
     var mousePos : CGPoint = CGPoint(x: 0, y: 0)
-    var previousPos : CGPoint = CGPoint(x: 0, y: 0)
 
     private var lastUpdateTime : TimeInterval = 0
-    //private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
     private var ballNode : SKShapeNode?
     private var cameraNode : SKCameraNode?
-    //private var sceneAnchorPoint : CGPoint = CGPoint(x: 0.5, y: 0.5)
     private var forceField : SKFieldNode?
     
     override func sceneDidLoad() {
-        
-//        cameraNode = SKCameraNode()
-//        self.addChild(cameraNode!)
-        
+                
         // scene background should be transparent
         self.backgroundColor = SKColor.clear
         
         self.lastUpdateTime = 0
-        
-        // Get label node from scene and store it for use later
-//        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-//        if let label = self.label {
-//            label.alpha = 0.0
-//            label.run(SKAction.fadeIn(withDuration: 2.0))
-//        }
-        
+
         // set up physics
         //self.physicsWorld.gravity = CGVector(dx: 0.0, dy: -9.8)
         self.physicsWorld.contactDelegate = self
-        
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
         
         // Create a 'ball' node from a circle shape node. We will copy this object to
         // spawn instances of it in response to input or game events. The ball should
@@ -73,8 +48,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             ballNode.physicsBody?.collisionBitMask = 0x2
             ballNode.physicsBody?.contactTestBitMask = 0x2
             ballNode.physicsBody?.affectedByGravity = false
-            // maximum elasticity, no friction
-            ballNode.physicsBody?.restitution = 0.7
+            ballNode.physicsBody?.restitution = 0.1
             ballNode.physicsBody?.friction = 0.1
             ballNode.physicsBody?.linearDamping = 0.1
             ballNode.physicsBody?.angularDamping = 0.0
@@ -249,7 +223,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let mousePos = view?.window?.mouseLocationOutsideOfEventStream
             let scenePos = self.convertPoint(fromView: mousePos!)
             // apply smoothing to the force field's position
-            let smoothing = 0.1
+            let smoothing = 0.04
             let target = CGPoint(x: scenePos.x, y: scenePos.y)
             let current = forceField.position
             let dx = target.x - current.x
