@@ -12,18 +12,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var entities = [GKEntity]()
     var graphs = [String : GKGraph]()
-    
+    var mousePos : CGPoint = CGPoint(x: 0, y: 0)
+
     private var lastUpdateTime : TimeInterval = 0
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
     private var ballNode : SKShapeNode?
-    private var mousePos : CGPoint = CGPoint(x: 0, y: 0)
+    //private var sceneAnchorPoint : CGPoint = CGPoint(x: 0.5, y: 0.5)
     
     override func sceneDidLoad() {
+        
+        let cameraNode = SKCameraNode()
+        cameraNode.position = CGPoint(x: self.size.width / 2,
+                                      y: self.size.height / 2)
+        self.addChild(cameraNode)
+        self.camera = cameraNode
         
         // scene background should be transparent
         self.backgroundColor = SKColor.clear
         
+        // set the anchor point to the center of the scene
+        //scene!.anchorPoint = sceneAnchorPoint
+        
+        // report the position at the center of the view, in view, scene, and world coordinates
         self.lastUpdateTime = 0
         
         // Get label node from scene and store it for use later
@@ -69,18 +80,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         // Create an edge loop physics body that follows the frame of the scene
-        let edgeLoop = SKPhysicsBody(edgeLoopFrom: self.frame)
-        self.physicsBody = edgeLoop
+//        let edgeLoop = SKPhysicsBody(edgeLoopFrom: self.frame)
+//        self.physicsBody = edgeLoop
     }
     
-    // spawn a ball at a given position with a given velocity
-    func spawnBall(atPosition pos: CGPoint, withVelocity vel: CGVector) {
-        print("Spawning ball at position \(pos) with velocity \(vel)")
-        if let ballNode = self.ballNode?.copy() as! SKShapeNode? {
-            ballNode.position = pos
-            ballNode.physicsBody?.velocity = vel
-            self.addChild(ballNode)
-        }
+    // spawn a ball
+    func spawnBall(fromEvent e: NSEvent) {
+        // spawn location is the center of the scene, 0,0 in scene coordinates.
+        // calculate the center point in view coordinates
+        let viewCenter = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        let spawnLocation = viewCenter
+        // calculate the velocity's angle from mousePos relative to the scene center
+        let dx = mousePos.x - spawnLocation.x
+        let dy = mousePos.y - spawnLocation.y
+        // calculate the velocity's magnitude based on mousePos's distance from the scene center
+        let distance = sqrt(dx*dx + dy*dy)
+        let scaled_distance = distance / 100.0
+        let velocity = CGVector(dx: dx * scaled_distance, dy: dy * scaled_distance)
+        print("p: \(spawnLocation) d: \(distance) v: \(velocity)")
+        // create a new ball node
+        let newBall = self.ballNode?.copy() as! SKShapeNode
+        newBall.position = spawnLocation
+        newBall.physicsBody?.velocity = velocity
+        self.addChild(newBall)
     }
     
     func touchDown(atPoint pos : CGPoint) {
@@ -123,13 +145,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func keyDown(with event: NSEvent) {
         switch event.keyCode {
         case 0x31:
-            // spawn a ball!
-            // the spawn position will be the center point of the view
-            let center = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
-            // the velocity of the spawned ball should be towards self.mousePos
-            let vel = CGVector(dx: self.mousePos.x - center.x, dy: self.mousePos.y - center.y)
-            
-            self.spawnBall(atPosition: center, withVelocity: vel)
+            // spawn a ball
+            self.spawnBall(fromEvent: event)
         default:
             print("keyDown: \(event.characters!) keyCode: \(event.keyCode)")
         }

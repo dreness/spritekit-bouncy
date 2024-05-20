@@ -44,6 +44,18 @@ class ViewController: NSViewController {
                 }
             }
         }
+        // set the mouse position to the mousePos property of the GameScene
+        NSEvent.addLocalMonitorForEvents(matching: .mouseMoved) {
+            (event) -> NSEvent? in
+            let mousePos = event.locationInWindow
+            if let scene = self.skView?.scene as? GameScene {
+                scene.mousePos = scene.convertPoint(fromView: mousePos)
+            }
+            return event
+        }
+        
+
     }
+    
 }
 
