@@ -15,7 +15,7 @@ class WindowController : NSWindowController {
         super.windowDidLoad()
         // allow window to be transparent
         self.window?.isOpaque = false
-        //self.window?.backgroundColor = NSColor.clear
+        self.window?.backgroundColor = NSColor.black.withAlphaComponent(0.2)
         self.window?.titleVisibility = .hidden
         self.window?.titlebarAppearsTransparent = true
         self.window?.styleMask.insert(.fullSizeContentView)
