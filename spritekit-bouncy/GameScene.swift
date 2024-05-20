@@ -127,7 +127,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
      }
     
     // spawn a ball
-    func spawnBall(fromEvent e: NSEvent) {
+    func spawnBall() {
         // spawn the ball at the center of the camera's view
         let spawnLocation = CGPoint(x: 0.0, y: 0.0)
         // calculate the velocity's angle from mousePos relative to the scene center
@@ -154,27 +154,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
+        spawnBall()
+//        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
+//            n.position = pos
+//            n.strokeColor = SKColor.green
+//            self.addChild(n)
+//        }
     }
     
     func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
+        spawnBall()
+
+//        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
+//            n.position = pos
+//            n.strokeColor = SKColor.blue
+//            self.addChild(n)
+//        }
     }
     
     func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
+        spawnBall()
+
+//        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
+//            n.position = pos
+//            n.strokeColor = SKColor.red
+//            self.addChild(n)
+//        }
     }
     
     override func mouseDown(with event: NSEvent) {
@@ -194,7 +199,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         switch event.keyCode {
         case 0x31:
             // spawn a ball
-            self.spawnBall(fromEvent: event)
+            self.spawnBall()
         default:
             print("fall through: \(event.characters!) \(event.keyCode)")
             //print("keyDown: \(event.characters!) keyCode: \(event.keyCode)")
