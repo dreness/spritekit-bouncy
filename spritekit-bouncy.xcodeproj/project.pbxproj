@@ -17,6 +17,7 @@
 		653AD26C2BFAC4E300275024 /* spritekit_bouncyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653AD26B2BFAC4E300275024 /* spritekit_bouncyTests.swift */; };
 		653AD2762BFAC4E300275024 /* spritekit_bouncyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653AD2752BFAC4E300275024 /* spritekit_bouncyUITests.swift */; };
 		653AD2782BFAC4E300275024 /* spritekit_bouncyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653AD2772BFAC4E300275024 /* spritekit_bouncyUITestsLaunchTests.swift */; };
+		65F899B32BFAD04E00B75CD9 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F899B22BFAD04E00B75CD9 /* WindowController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		653AD2712BFAC4E300275024 /* spritekit-bouncyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "spritekit-bouncyUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		653AD2752BFAC4E300275024 /* spritekit_bouncyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = spritekit_bouncyUITests.swift; sourceTree = "<group>"; };
 		653AD2772BFAC4E300275024 /* spritekit_bouncyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = spritekit_bouncyUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		65F899B22BFAD04E00B75CD9 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				653AD2532BFAC4E200275024 /* AppDelegate.swift */,
+				65F899B22BFAD04E00B75CD9 /* WindowController.swift */,
 				653AD2552BFAC4E200275024 /* GameScene.sks */,
 				653AD2572BFAC4E200275024 /* Actions.sks */,
 				653AD2592BFAC4E200275024 /* GameScene.swift */,
@@ -263,6 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				653AD25C2BFAC4E200275024 /* ViewController.swift in Sources */,
+				65F899B32BFAD04E00B75CD9 /* WindowController.swift in Sources */,
 				653AD25A2BFAC4E200275024 /* GameScene.swift in Sources */,
 				653AD2542BFAC4E200275024 /* AppDelegate.swift in Sources */,
 			);

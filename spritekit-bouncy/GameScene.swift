@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var entities = [GKEntity]()
     var graphs = [String : GKGraph]()
@@ -16,8 +16,13 @@ class GameScene: SKScene {
     private var lastUpdateTime : TimeInterval = 0
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
+    private var ballNode : SKShapeNode?
+    private var mousePos : CGPoint = CGPoint(x: 0, y: 0)
     
     override func sceneDidLoad() {
+        
+        // scene background should be transparent
+        self.backgroundColor = SKColor.clear
         
         self.lastUpdateTime = 0
         
@@ -27,6 +32,10 @@ class GameScene: SKScene {
             label.alpha = 0.0
             label.run(SKAction.fadeIn(withDuration: 2.0))
         }
+        
+        // set up physics
+        self.physicsWorld.gravity = CGVector(dx: 0.0, dy: -9.8)
+        self.physicsWorld.contactDelegate = self
         
         // Create shape node to use during mouse interaction
         let w = (self.size.width + self.size.height) * 0.05
@@ -40,8 +49,39 @@ class GameScene: SKScene {
                                               SKAction.fadeOut(withDuration: 0.5),
                                               SKAction.removeFromParent()]))
         }
+        
+        // Create a 'ball' node from a circle shape node. We will copy this object to
+        // spawn instances of it in response to input or game events. The ball should
+        // be small, solid background color, configured as a kinematic physics
+        // body with a circular collision boundary
+        let ballRadius = 20.0
+        self.ballNode = SKShapeNode.init(circleOfRadius: CGFloat(ballRadius))
+        if let ballNode = self.ballNode {
+            ballNode.fillColor = SKColor.red
+            ballNode.strokeColor = SKColor.black
+            ballNode.lineWidth = 1.0
+            ballNode.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(ballRadius))
+            ballNode.physicsBody?.isDynamic = true
+            ballNode.physicsBody?.categoryBitMask = 0b1
+            ballNode.physicsBody?.collisionBitMask = 0b1
+            ballNode.physicsBody?.contactTestBitMask = 0b1
+            ballNode.physicsBody?.affectedByGravity = true
+        }
+        
+        // Create an edge loop physics body that follows the frame of the scene
+        let edgeLoop = SKPhysicsBody(edgeLoopFrom: self.frame)
+        self.physicsBody = edgeLoop
     }
     
+    // spawn a ball at a given position with a given velocity
+    func spawnBall(atPosition pos: CGPoint, withVelocity vel: CGVector) {
+        print("Spawning ball at position \(pos) with velocity \(vel)")
+        if let ballNode = self.ballNode?.copy() as! SKShapeNode? {
+            ballNode.position = pos
+            ballNode.physicsBody?.velocity = vel
+            self.addChild(ballNode)
+        }
+    }
     
     func touchDown(atPoint pos : CGPoint) {
         if let n = self.spinnyNode?.copy() as! SKShapeNode? {
@@ -74,6 +114,7 @@ class GameScene: SKScene {
     override func mouseDragged(with event: NSEvent) {
         self.touchMoved(toPoint: event.location(in: self))
     }
+
     
     override func mouseUp(with event: NSEvent) {
         self.touchUp(atPoint: event.location(in: self))
@@ -82,9 +123,13 @@ class GameScene: SKScene {
     override func keyDown(with event: NSEvent) {
         switch event.keyCode {
         case 0x31:
-            if let label = self.label {
-                label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-            }
+            // spawn a ball!
+            // the spawn position will be the center point of the view
+            let center = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+            // the velocity of the spawned ball should be towards self.mousePos
+            let vel = CGVector(dx: self.mousePos.x - center.x, dy: self.mousePos.y - center.y)
+            
+            self.spawnBall(atPosition: center, withVelocity: vel)
         default:
             print("keyDown: \(event.characters!) keyCode: \(event.keyCode)")
         }
