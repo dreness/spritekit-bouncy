@@ -41,6 +41,8 @@ class ViewController: NSViewController {
                     view.showsFPS = true
                     view.showsNodeCount = true
                     view.allowsTransparency = true
+                    //view.showsFields = true
+                    //view.showsPhysics = true
                 }
             }
         }
@@ -49,7 +51,12 @@ class ViewController: NSViewController {
 //            (event) -> NSEvent? in
 //            let mousePos = event.locationInWindow
 //            if let scene = self.skView?.scene as? GameScene {
-//                scene.mousePos = scene.convertPoint(fromView: mousePos)
+//                //scene.mousePos = scene.convertPoint(fromView: mousePos)
+//                // update force field center and region
+//                if let forceField = scene.forceField {
+//                    forceField.position = scene.convertPoint(fromView: mousePos)
+//                    forceField.region = SKRegion(radius: 100.0)
+//                }
 //            }
 //            return event
 //        }
